@@ -12,6 +12,7 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  ArrowLeftRight,
 } from "lucide-react";
 
 const EditorToolbar = ({ editor }) => {
@@ -119,6 +120,14 @@ const EditorToolbar = ({ editor }) => {
         title="右对齐 (Ctrl+Shift+R)"
       >
         <AlignRight size={16} />
+      </ToolbarButton>
+
+      <ToolbarButton
+        onClick={() => editor.chain().focus().insertFlexSpace().run()}
+        isActive={false}
+        title="弹性空间 #h(1fr) (Ctrl+Shift+Space)"
+      >
+        <ArrowLeftRight size={16} />
       </ToolbarButton>
 
       <Separator />

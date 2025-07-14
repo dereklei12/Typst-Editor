@@ -107,6 +107,25 @@ body {
     text-align: right !important;
 }
 
+/* 弹性空间样式 */
+.typst-flex-space {
+    display: inline-block;
+    background-color: #e8f4fd;
+    border: 1px solid #b3d9f2;
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin: 0 2px;
+    font-size: 12px;
+    color: #2c5282;
+    cursor: pointer;
+    user-select: none;
+}
+
+.typst-flex-space:hover {
+    background-color: #bee3f8;
+    border-color: #90cdf4;
+}
+
 /* Slash命令样式 */
 .slash-command {
     background: white;

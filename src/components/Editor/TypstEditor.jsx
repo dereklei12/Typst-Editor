@@ -11,6 +11,7 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import EditorToolbar from "./EditorToolbar";
 import TextAlign from "./extensions/TextAlign";
+import FlexSpace from "./extensions/FlexSpace";
 import SlashCommands from "./SlashCommands";
 import { typstToHtml, htmlToTypst } from "../../utils/typstUtils";
 
@@ -31,6 +32,7 @@ const TypstEditor = ({ content, onChange }) => {
       OrderedList,
       ListItem,
       TextAlign,
+      FlexSpace,
       SlashCommands,
     ],
     content: typstToHtml(content),

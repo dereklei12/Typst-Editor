@@ -77,6 +77,12 @@ export const typstToHtml = (typstContent) => {
     '<p style="text-align: left">$1</p>',
   );
 
+  // 转换弹性空间
+  html = html.replace(
+    /#h\(1fr\)/g,
+    '<span class="typst-flex-space" data-typst="#h(1fr)">↔</span>',
+  );
+
   // 转换粗体和斜体
   html = html.replace(/\*([^*]+)\*/g, "<strong>$1</strong>");
   html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
@@ -205,6 +211,12 @@ export const htmlToTypst = (htmlContent) => {
           return `${children}\n\n`;
         case "br":
           return "\n";
+        case "span":
+          // 处理弹性空间
+          if (node.classList.contains("typst-flex-space")) {
+            return "#h(1fr)";
+          }
+          return children;
         default:
           return children;
       }

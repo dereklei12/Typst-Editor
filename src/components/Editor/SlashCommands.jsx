@@ -21,6 +21,7 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  ArrowLeftRight,
 } from "lucide-react";
 
 const CommandsList = forwardRef((props, ref) => {
@@ -138,6 +139,14 @@ const CommandsList = forwardRef((props, ref) => {
         editor.chain().focus().deleteRange(range).setTextAlign("right").run();
       },
     },
+    {
+      title: "弹性空间",
+      description: "插入弹性水平空间 #h(1fr)",
+      icon: <ArrowLeftRight className="slash-command-icon" />,
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).insertFlexSpace().run();
+      },
+    },
   ];
 
   const filteredCommands = commands.filter((command) =>
@@ -241,6 +250,10 @@ const SlashCommands = Extension.create({
             "heading3",
             "bulletList",
             "orderedList",
+            "left",
+            "center",
+            "right",
+            "flexSpace",
           ].filter((item) =>
             item.toLowerCase().startsWith(query.toLowerCase()),
           );
