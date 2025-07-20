@@ -22,6 +22,7 @@ import {
   AlignCenter,
   AlignRight,
   ArrowLeftRight,
+  Minus,
 } from "lucide-react";
 
 const CommandsList = forwardRef((props, ref) => {
@@ -147,6 +148,14 @@ const CommandsList = forwardRef((props, ref) => {
         editor.chain().focus().deleteRange(range).insertFlexSpace().run();
       },
     },
+    {
+      title: "分隔线",
+      description: "插入水平分隔线 #line(length: 100%)",
+      icon: <Minus className="slash-command-icon" />,
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).insertLine().run();
+      },
+    },
   ];
 
   const filteredCommands = commands.filter((command) =>
@@ -254,6 +263,7 @@ const SlashCommands = Extension.create({
             "center",
             "right",
             "flexSpace",
+            "line",
           ].filter((item) =>
             item.toLowerCase().startsWith(query.toLowerCase()),
           );

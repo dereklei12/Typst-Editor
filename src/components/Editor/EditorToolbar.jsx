@@ -13,6 +13,7 @@ import {
   AlignCenter,
   AlignRight,
   ArrowLeftRight,
+  Minus,
 } from "lucide-react";
 
 const EditorToolbar = ({ editor }) => {
@@ -128,6 +129,14 @@ const EditorToolbar = ({ editor }) => {
         title="弹性空间 #h(1fr) (Ctrl+Shift+Space)"
       >
         <ArrowLeftRight size={16} />
+      </ToolbarButton>
+
+      <ToolbarButton
+        onClick={() => editor.chain().focus().insertLine().run()}
+        isActive={false}
+        title="分隔线 #line(length: 100%) (Ctrl+Shift+-)"
+      >
+        <Minus size={16} />
       </ToolbarButton>
 
       <Separator />

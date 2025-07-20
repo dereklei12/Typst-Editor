@@ -12,6 +12,7 @@ import ListItem from "@tiptap/extension-list-item";
 import EditorToolbar from "./EditorToolbar";
 import TextAlign from "./extensions/TextAlign";
 import FlexSpace from "./extensions/FlexSpace";
+import Line from "./extensions/Line";
 import SlashCommands from "./SlashCommands";
 import { typstToHtml, htmlToTypst } from "../../utils/typstUtils";
 
@@ -33,6 +34,7 @@ const TypstEditor = ({ content, onChange }) => {
       ListItem,
       TextAlign,
       FlexSpace,
+      Line,
       SlashCommands,
     ],
     content: typstToHtml(content),
