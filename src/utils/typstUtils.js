@@ -83,6 +83,14 @@ export const typstToHtml = (typstContent) => {
     '<span class="typst-flex-space" data-typst="#h(1fr)">↔</span>',
   );
 
+  // 转换垂直空间
+  html = html.replace(
+    /#v\(([^)]+)\)/g,
+    (match, spacing) => {
+      return `<div class="typst-vertical-space" data-typst="#v(${spacing})" spacing="${spacing}" style="height: ${spacing.includes('fr') ? '20px' : spacing}; display: block; border-top: 1px dashed #ccc; position: relative;"><span style="position: absolute; left: 50%; top: -10px; transform: translateX(-50%); background: white; padding: 0 5px; color: #888; font-size: 12px;">↕ ${spacing}</span></div>`;
+    }
+  );
+
   // 转换分隔线
   html = html.replace(
     /#line\(length:\s*100%\)/g,
@@ -221,6 +229,13 @@ export const htmlToTypst = (htmlContent) => {
           // 处理弹性空间
           if (node.classList.contains("typst-flex-space")) {
             return "#h(1fr)";
+          }
+          return children;
+        case "div":
+          // 处理垂直空间
+          if (node.classList.contains("typst-vertical-space")) {
+            const spacing = node.getAttribute("spacing") || "1em";
+            return `#v(${spacing})\n\n`;
           }
           return children;
         case "hr":

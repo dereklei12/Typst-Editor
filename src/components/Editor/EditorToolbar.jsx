@@ -13,6 +13,7 @@ import {
   AlignCenter,
   AlignRight,
   ArrowLeftRight,
+  ArrowUpDown,
   Minus,
 } from "lucide-react";
 
@@ -32,6 +33,21 @@ const EditorToolbar = ({ editor }) => {
   );
 
   const Separator = () => <div className="toolbar-separator" />;
+
+  const handleVerticalSpaceClick = () => {
+    const spacing = prompt("请输入垂直空间大小，例如：1em, 2pt, 1fr", "1em");
+    if (spacing && spacing.trim()) {
+      const trimmedSpacing = spacing.trim();
+      
+      // Basic validation for common units
+      if (!/^\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
+        alert("请输入有效格式，例如：1em, 2pt, 1fr");
+        return;
+      }
+      
+      editor.chain().focus().insertVerticalSpace({ spacing: trimmedSpacing }).run();
+    }
+  };
 
   return (
     <div className="editor-toolbar">
@@ -129,6 +145,14 @@ const EditorToolbar = ({ editor }) => {
         title="弹性空间 #h(1fr) (Ctrl+Shift+Space)"
       >
         <ArrowLeftRight size={16} />
+      </ToolbarButton>
+
+      <ToolbarButton
+        onClick={handleVerticalSpaceClick}
+        isActive={false}
+        title="垂直空间 #v() (Ctrl+Shift+Enter)"
+      >
+        <ArrowUpDown size={16} />
       </ToolbarButton>
 
       <ToolbarButton

@@ -13,6 +13,7 @@ import EditorToolbar from "./EditorToolbar";
 import TextAlign from "./extensions/TextAlign";
 import FlexSpace from "./extensions/FlexSpace";
 import Line from "./extensions/Line";
+import VerticalSpace from "./extensions/VerticalSpace";
 import SlashCommands from "./SlashCommands";
 import { typstToHtml, htmlToTypst } from "../../utils/typstUtils";
 
@@ -35,6 +36,7 @@ const TypstEditor = ({ content, onChange }) => {
       TextAlign,
       FlexSpace,
       Line,
+      VerticalSpace,
       SlashCommands,
     ],
     content: typstToHtml(content),

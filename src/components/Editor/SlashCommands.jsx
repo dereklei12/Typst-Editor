@@ -22,6 +22,7 @@ import {
   AlignCenter,
   AlignRight,
   ArrowLeftRight,
+  ArrowUpDown,
   Minus,
 } from "lucide-react";
 
@@ -149,6 +150,25 @@ const CommandsList = forwardRef((props, ref) => {
       },
     },
     {
+      title: "垂直空间",
+      description: "插入垂直空间 #v()",
+      icon: <ArrowUpDown className="slash-command-icon" />,
+      command: ({ editor, range }) => {
+        const spacing = prompt("请输入垂直空间大小，例如：1em, 2pt, 1fr", "1em");
+        if (spacing && spacing.trim()) {
+          const trimmedSpacing = spacing.trim();
+          
+          // Basic validation for common units
+          if (!/^\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
+            alert("请输入有效格式，例如：1em, 2pt, 1fr");
+            return;
+          }
+          
+          editor.chain().focus().deleteRange(range).insertVerticalSpace({ spacing: trimmedSpacing }).run();
+        }
+      },
+    },
+    {
       title: "分隔线",
       description: "插入水平分隔线 #line(length: 100%)",
       icon: <Minus className="slash-command-icon" />,
@@ -263,6 +283,7 @@ const SlashCommands = Extension.create({
             "center",
             "right",
             "flexSpace",
+            "verticalSpace",
             "line",
           ].filter((item) =>
             item.toLowerCase().startsWith(query.toLowerCase()),
