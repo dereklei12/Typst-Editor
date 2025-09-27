@@ -1,3 +1,4 @@
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const cors = require("cors");
 const { exec } = require("child_process");
@@ -34,9 +35,13 @@ app.post("/compile", async (req, res) => {
     // 写入源代码到临时文件
     fs.writeFileSync(inputFile, source, "utf8");
 
-    // 执行Typst编译为PNG，使用600 PPI
+    // 获取字体路径并构建编译命令
+    const fontPaths = process.env.TYPST_FONT_PATHS;
+    const fontFlag = fontPaths ? `--font-path "${fontPaths}"` : "";
+
+    // 执行Typst编译为PNG，使用1200 PPI
     exec(
-      `typst compile --format png --ppi 1200 "${inputFile}" "${outputFile}" --ignore-system-fonts`,
+      `typst compile --format png --ppi 1200 ${fontFlag} "${inputFile}" "${outputFile}" --ignore-system-fonts`,
       (error, stdout, stderr) => {
         if (error) {
           console.error("编译错误:", error);
