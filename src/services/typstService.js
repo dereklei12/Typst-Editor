@@ -7,7 +7,7 @@ class TypstService {
     this.baseURL =
       process.env.NODE_ENV === "production"
         ? "" // 生产环境使用相对路径
-        : process.env.REACT_APP_TYPST_SERVER_URL || "http://localhost:8080";
+        : process.env.REACT_APP_TYPST_SERVER_URL || "http://localhost:8081";
     this.api = axios.create({
       baseURL: this.baseURL,
       timeout: 30000, // 30秒超时
@@ -84,6 +84,77 @@ class TypstService {
     } catch (error) {
       console.error("健康检查失败:", error);
       return false;
+    }
+  }
+
+  /**
+   * 下载PDF文件
+   * @param {string} source - Typst源码
+   * @returns {Promise<{success: boolean, error?: string}>}
+   */
+  async downloadPDF(source) {
+    try {
+      const response = await this.api.post(
+        "/download-pdf",
+        {
+          source,
+        },
+        {
+          responseType: "blob", // 重要：设置响应类型为blob
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        // 创建下载链接
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+
+        // 创建临时下载链接
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "typst-document.pdf";
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+          error: "PDF下载失败",
+        };
+      }
+    } catch (error) {
+      console.error("PDF下载错误:", error);
+
+      if (error.response) {
+        // 服务器返回了错误响应
+        return {
+          success: false,
+          error:
+            error.response.data?.error || `下载失败: ${error.response.status}`,
+        };
+      } else if (error.request) {
+        // 请求发出但没有收到响应
+        return {
+          success: false,
+          error: "无法连接到服务器，请检查网络连接",
+        };
+      } else {
+        // 其他错误
+        return {
+          success: false,
+          error: error.message || "下载过程中发生未知错误",
+        };
+      }
     }
   }
 

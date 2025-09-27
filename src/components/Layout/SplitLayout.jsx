@@ -18,9 +18,31 @@ const SplitLayout = () => {
 #align(center)[
   这是居中的文本
 ]
+
+#pagebreak()
+
+= 第二页示例
+
+这是第二页的内容，用来测试多页SVG输出功能。
+
+== 数学公式
+
+$integral_0^1 x^2 d x = 1/3$
+
+== 表格示例
+
+#table(
+  columns: 3,
+  [名称], [年龄], [城市],
+  [张三], [25], [北京],
+  [李四], [30], [上海],
+  [王五], [28], [广州],
+)
 `);
 
-  const { pngPages, isCompiling, error } = useTypstCompiler(content);
+  const { pngPages, isCompiling, error } = useTypstCompiler(content, {
+    debounceDelay: 300, // 减少防抖延迟以获得更快响应
+  });
 
   const handleContentChange = useCallback((newContent) => {
     setContent(newContent);
@@ -58,6 +80,7 @@ const SplitLayout = () => {
           pngPages={pngPages}
           isCompiling={isCompiling}
           error={error}
+          sourceCode={content}
         />
       </div>
     </div>

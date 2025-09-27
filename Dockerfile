@@ -69,5 +69,5 @@ EXPOSE 8080
 # 确保工作目录是typst-server
 WORKDIR /app/typst-server
 
-# 启动后端服务
-CMD ["node", "server.js"]
+# 启动简化的SVG编译服务
+CMD ["node", "simple-svg-server.js"]
