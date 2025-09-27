@@ -3,6 +3,6 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "node typst-server/server.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
