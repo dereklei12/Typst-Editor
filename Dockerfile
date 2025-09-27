@@ -66,5 +66,8 @@ ENV TYPST_FONT_PATHS=/app/fonts
 # 暴露端口
 EXPOSE 8080
 
+# 确保工作目录是typst-server
+WORKDIR /app/typst-server
+
 # 启动后端服务
 CMD ["node", "server.js"]
