@@ -3,8 +3,11 @@ import axios from "axios";
 class TypstService {
   constructor() {
     // Typst服务器的基础URL，可以根据实际情况修改
+    // 在生产环境中使用相对路径，这样会自动使用当前域名
     this.baseURL =
-      process.env.REACT_APP_TYPST_SERVER_URL || "http://localhost:8080";
+      process.env.NODE_ENV === "production"
+        ? "" // 生产环境使用相对路径
+        : process.env.REACT_APP_TYPST_SERVER_URL || "http://localhost:8080";
     this.api = axios.create({
       baseURL: this.baseURL,
       timeout: 30000, // 30秒超时
