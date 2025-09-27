@@ -12,9 +12,9 @@ class TypstService {
   }
 
   /**
-   * 编译Typst源码为PDF
+   * 编译Typst源码为PNG
    * @param {string} source - Typst源码
-   * @returns {Promise<{success: boolean, data?: Blob, error?: string}>}
+   * @returns {Promise<{success: boolean, data?: {totalPages: number, pages: Array}, error?: string}>}
    */
   async compile(source) {
     try {
@@ -22,17 +22,17 @@ class TypstService {
         "/compile",
         {
           source,
-          format: "pdf",
+          format: "png",
         },
         {
-          responseType: "blob", // 期望返回二进制数据
+          responseType: "json", // 期望返回JSON数据
           headers: {
             "Content-Type": "application/json",
           },
         },
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.success) {
         return {
           success: true,
           data: response.data,
@@ -40,7 +40,7 @@ class TypstService {
       } else {
         return {
           success: false,
-          error: "编译失败",
+          error: response.data.error || "编译失败",
         };
       }
     } catch (error) {

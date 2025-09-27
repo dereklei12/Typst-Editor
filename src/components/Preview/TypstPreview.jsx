@@ -1,7 +1,7 @@
 import React from "react";
 import { FileText, AlertCircle, Loader2 } from "lucide-react";
 
-const TypstPreview = ({ pdfUrl, isCompiling, error }) => {
+const TypstPreview = ({ pngPages, isCompiling, error }) => {
   return (
     <div
       style={{
@@ -23,7 +23,9 @@ const TypstPreview = ({ pdfUrl, isCompiling, error }) => {
         }}
       >
         <FileText size={16} />
-        <span style={{ fontWeight: "500" }}>预览</span>
+        <span style={{ fontWeight: "500" }}>
+          预览{pngPages && ` (${pngPages.totalPages}页)`}
+        </span>
         {isCompiling && (
           <div
             style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
@@ -44,9 +46,9 @@ const TypstPreview = ({ pdfUrl, isCompiling, error }) => {
         style={{
           flex: 1,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          flexDirection: "column",
           padding: "1rem",
+          overflow: "hidden",
         }}
       >
         {error ? (
@@ -55,6 +57,8 @@ const TypstPreview = ({ pdfUrl, isCompiling, error }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
               gap: "1rem",
               color: "#dc2626",
               textAlign: "center",
@@ -66,25 +70,57 @@ const TypstPreview = ({ pdfUrl, isCompiling, error }) => {
               <p style={{ fontSize: "0.875rem" }}>{error}</p>
             </div>
           </div>
-        ) : pdfUrl ? (
-          <iframe
-            src={pdfUrl}
+        ) : pngPages ? (
+          <div
             style={{
-              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              overflowY: "auto",
               height: "100%",
-              border: "none",
-              borderRadius: "8px",
-              backgroundColor: "white",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             }}
-            title="Typst预览"
-          />
+          >
+            {pngPages.pages.map((page, index) => (
+              <div
+                key={page.pageNumber}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "#6b7280",
+                    fontWeight: "500",
+                  }}
+                >
+                  第 {page.pageNumber} 页
+                </div>
+                <img
+                  src={page.data}
+                  alt={`Typst预览 - 第${page.pageNumber}页`}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    backgroundColor: "white",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
               gap: "1rem",
               color: "#6b7280",
               textAlign: "center",

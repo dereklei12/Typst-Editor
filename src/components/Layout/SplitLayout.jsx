@@ -20,7 +20,7 @@ const SplitLayout = () => {
 ]
 `);
 
-  const { pdfUrl, isCompiling, error } = useTypstCompiler(content);
+  const { pngPages, isCompiling, error } = useTypstCompiler(content);
 
   const handleContentChange = useCallback((newContent) => {
     setContent(newContent);
@@ -54,7 +54,11 @@ const SplitLayout = () => {
           flexDirection: "column",
         }}
       >
-        <TypstPreview pdfUrl={pdfUrl} isCompiling={isCompiling} error={error} />
+        <TypstPreview
+          pngPages={pngPages}
+          isCompiling={isCompiling}
+          error={error}
+        />
       </div>
     </div>
   );

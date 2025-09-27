@@ -5,6 +5,7 @@ import tippy from "tippy.js";
 import React, {
   useState,
   useEffect,
+  useRef,
   forwardRef,
   useImperativeHandle,
 } from "react";
@@ -28,6 +29,8 @@ import {
 
 const CommandsList = forwardRef((props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const containerRef = useRef(null);
+  const selectedItemRef = useRef(null);
 
   const commands = [
     {
@@ -154,17 +157,25 @@ const CommandsList = forwardRef((props, ref) => {
       description: "插入垂直空间 #v()",
       icon: <ArrowUpDown className="slash-command-icon" />,
       command: ({ editor, range }) => {
-        const spacing = prompt("请输入垂直空间大小，例如：1em, 2pt, 1fr", "1em");
+        const spacing = prompt(
+          "请输入垂直空间大小，例如：1em, 2pt, 1fr",
+          "1em",
+        );
         if (spacing && spacing.trim()) {
           const trimmedSpacing = spacing.trim();
-          
-          // Basic validation for common units
-          if (!/^\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
-            alert("请输入有效格式，例如：1em, 2pt, 1fr");
+
+          // Basic validation for common units (allowing negative values)
+          if (!/^-?\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
+            alert("请输入有效格式，例如：1em, -2pt, 1fr");
             return;
           }
-          
-          editor.chain().focus().deleteRange(range).insertVerticalSpace({ spacing: trimmedSpacing }).run();
+
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .insertVerticalSpace({ spacing: trimmedSpacing })
+            .run();
         }
       },
     },
@@ -185,6 +196,34 @@ const CommandsList = forwardRef((props, ref) => {
   useEffect(() => {
     setSelectedIndex(0);
   }, [props.query]);
+
+  // 自动滚动到选中的项目
+  useEffect(() => {
+    if (selectedItemRef.current && containerRef.current) {
+      const container = containerRef.current;
+      const selectedItem = selectedItemRef.current;
+
+      const containerRect = container.getBoundingClientRect();
+      const itemRect = selectedItem.getBoundingClientRect();
+
+      const containerScrollTop = container.scrollTop;
+      const containerHeight = container.clientHeight;
+      const itemOffsetTop = selectedItem.offsetTop;
+      const itemHeight = selectedItem.offsetHeight;
+
+      // 如果选中项目在容器顶部之外
+      if (itemOffsetTop < containerScrollTop) {
+        container.scrollTop = itemOffsetTop;
+      }
+      // 如果选中项目在容器底部之外
+      else if (
+        itemOffsetTop + itemHeight >
+        containerScrollTop + containerHeight
+      ) {
+        container.scrollTop = itemOffsetTop + itemHeight - containerHeight;
+      }
+    }
+  }, [selectedIndex, filteredCommands.length]);
 
   const selectItem = (index) => {
     const command = filteredCommands[index];
@@ -218,11 +257,12 @@ const CommandsList = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="slash-command">
+    <div className="slash-command" ref={containerRef}>
       {filteredCommands.length ? (
         filteredCommands.map((command, index) => (
           <div
             key={index}
+            ref={index === selectedIndex ? selectedItemRef : null}
             className={`slash-command-item ${
               index === selectedIndex ? "is-selected" : ""
             }`}

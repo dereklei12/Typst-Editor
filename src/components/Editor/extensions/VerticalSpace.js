@@ -2,9 +2,9 @@ import { Node } from "@tiptap/core";
 
 const VerticalSpace = Node.create({
   name: "verticalSpace",
-  
+
   group: "block",
-  
+
   atom: true,
 
   addAttributes() {
@@ -29,19 +29,20 @@ const VerticalSpace = Node.create({
   renderHTML({ HTMLAttributes }) {
     const spacing = HTMLAttributes.spacing || "1em";
     const typstCode = `#v(${spacing})`;
-    
+
     return [
       "div",
       {
         class: "typst-vertical-space",
         "data-typst": typstCode,
-        style: `height: ${spacing.includes('fr') ? '20px' : spacing}; display: block; border-top: 1px dashed #ccc; position: relative;`,
+        style: `height: ${spacing.includes("fr") ? "20px" : spacing}; display: block; border-top: 1px dashed #ccc; position: relative;`,
         ...HTMLAttributes,
       },
       [
         "span",
         {
-          style: "position: absolute; left: 50%; top: -10px; transform: translateX(-50%); background: white; padding: 0 5px; color: #888; font-size: 12px;",
+          style:
+            "position: absolute; left: 50%; top: -10px; transform: translateX(-50%); background: white; padding: 0 5px; color: #888; font-size: 12px;",
         },
         `↕ ${spacing}`,
       ],
@@ -69,17 +70,22 @@ const VerticalSpace = Node.create({
     return {
       "Mod-Shift-Enter": () => {
         // Prompt user for input
-        const spacing = prompt("请输入垂直空间大小，例如：1em, 2pt, 1fr", "1em");
+        const spacing = prompt(
+          "请输入垂直空间大小，例如：1em, 2pt, 1fr",
+          "1em",
+        );
         if (spacing && spacing.trim()) {
           const trimmedSpacing = spacing.trim();
-          
-          // Basic validation for common units
-          if (!/^\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
-            alert("请输入有效格式，例如：1em, 2pt, 1fr");
+
+          // Basic validation for common units (allowing negative values)
+          if (!/^-?\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
+            alert("请输入有效格式，例如：1em, -2pt, 1fr");
             return false;
           }
-          
-          return this.editor.commands.insertVerticalSpace({ spacing: trimmedSpacing });
+
+          return this.editor.commands.insertVerticalSpace({
+            spacing: trimmedSpacing,
+          });
         }
         return false;
       },

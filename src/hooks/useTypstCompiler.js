@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import typstService from "../services/typstService";
+import { generateFontSetting } from "../utils/fontUtils";
 
 const useTypstCompiler = (source, options = {}) => {
-  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pngPages, setPngPages] = useState(null);
   const [isCompiling, setIsCompiling] = useState(false);
   const [error, setError] = useState(null);
   const [isServerHealthy, setIsServerHealthy] = useState(false);
@@ -10,7 +11,7 @@ const useTypstCompiler = (source, options = {}) => {
   // 防抖延迟，默认500ms
   const debounceDelay = options.debounceDelay || 500;
   const debounceTimer = useRef(null);
-  const previousUrl = useRef(null);
+  const previousUrls = useRef([]);
 
   // 检查服务器健康状态
   useEffect(() => {
@@ -29,11 +30,16 @@ const useTypstCompiler = (source, options = {}) => {
     return () => clearInterval(healthInterval);
   }, []);
 
+  // 检查源代码是否已包含字体设置
+  const hasFontSetting = (code) => {
+    return /#set\s+text\s*\(\s*font:\s*\(/.test(code);
+  };
+
   // 编译函数
   const compile = useCallback(
     async (sourceCode) => {
       if (!sourceCode.trim()) {
-        setPdfUrl(null);
+        setPngPages(null);
         setError(null);
         return;
       }
@@ -46,27 +52,39 @@ const useTypstCompiler = (source, options = {}) => {
       setIsCompiling(true);
       setError(null);
 
+      // 如果源代码没有字体设置，自动添加默认字体设置
+      let finalSourceCode = sourceCode;
+      if (!hasFontSetting(sourceCode)) {
+        const defaultFontSetting = generateFontSetting();
+        finalSourceCode = defaultFontSetting + "\n" + sourceCode;
+      }
+
       try {
-        const result = await typstService.compile(sourceCode);
+        const result = await typstService.compile(finalSourceCode);
 
         if (result.success && result.data) {
-          // 清理之前的URL
-          if (previousUrl.current) {
-            URL.revokeObjectURL(previousUrl.current);
-          }
+          // 清理之前的URLs
+          previousUrls.current.forEach((url) => {
+            if (url.startsWith("blob:")) {
+              URL.revokeObjectURL(url);
+            }
+          });
 
-          // 创建新的PDF URL
-          const newUrl = URL.createObjectURL(result.data);
-          setPdfUrl(newUrl);
-          previousUrl.current = newUrl;
+          // 设置新的PNG页面数据 (base64格式直接使用，不需要创建blob URL)
+          setPngPages({
+            totalPages: result.data.totalPages,
+            pages: result.data.pages,
+          });
+          // 记录当前URLs用于清理 (base64不需要清理，但保持一致性)
+          previousUrls.current = result.data.pages.map((page) => page.data);
           setError(null);
         } else {
-          setPdfUrl(null);
+          setPngPages(null);
           setError(result.error || "编译失败");
         }
       } catch (err) {
         console.error("编译过程中出错:", err);
-        setPdfUrl(null);
+        setPngPages(null);
         setError("编译过程中发生错误: " + err.message);
       } finally {
         setIsCompiling(false);
@@ -105,12 +123,14 @@ const useTypstCompiler = (source, options = {}) => {
     };
   }, [source, debouncedCompile, isServerHealthy]);
 
-  // 组件卸载时清理URL
+  // 组件卸载时清理URLs
   useEffect(() => {
     return () => {
-      if (previousUrl.current) {
-        URL.revokeObjectURL(previousUrl.current);
-      }
+      previousUrls.current.forEach((url) => {
+        if (url.startsWith("blob:")) {
+          URL.revokeObjectURL(url);
+        }
+      });
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
       }
@@ -126,7 +146,7 @@ const useTypstCompiler = (source, options = {}) => {
   }, [compile, source]);
 
   return {
-    pdfUrl,
+    pngPages,
     isCompiling,
     error,
     isServerHealthy,

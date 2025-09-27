@@ -16,8 +16,9 @@ import {
   ArrowUpDown,
   Minus,
 } from "lucide-react";
+import FontSelector from "./FontSelector";
 
-const EditorToolbar = ({ editor }) => {
+const EditorToolbar = ({ editor, content, onFontChange }) => {
   if (!editor) {
     return null;
   }
@@ -38,19 +39,27 @@ const EditorToolbar = ({ editor }) => {
     const spacing = prompt("请输入垂直空间大小，例如：1em, 2pt, 1fr", "1em");
     if (spacing && spacing.trim()) {
       const trimmedSpacing = spacing.trim();
-      
-      // Basic validation for common units
-      if (!/^\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
-        alert("请输入有效格式，例如：1em, 2pt, 1fr");
+
+      // Basic validation for common units (allowing negative values)
+      if (!/^-?\d+(\.\d+)?(em|pt|fr)$/.test(trimmedSpacing)) {
+        alert("请输入有效格式，例如：1em, -2pt, 1fr");
         return;
       }
-      
-      editor.chain().focus().insertVerticalSpace({ spacing: trimmedSpacing }).run();
+
+      editor
+        .chain()
+        .focus()
+        .insertVerticalSpace({ spacing: trimmedSpacing })
+        .run();
     }
   };
 
   return (
     <div className="editor-toolbar">
+      <FontSelector content={content} onFontChange={onFontChange} />
+
+      <Separator />
+
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         isActive={editor.isActive("bold")}

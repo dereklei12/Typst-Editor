@@ -16,6 +16,7 @@ import Line from "./extensions/Line";
 import VerticalSpace from "./extensions/VerticalSpace";
 import SlashCommands from "./SlashCommands";
 import { typstToHtml, htmlToTypst } from "../../utils/typstUtils";
+import { updateFontInContent } from "../../utils/fontUtils";
 
 const TypstEditor = ({ content, onChange }) => {
   const editor = useEditor({
@@ -53,9 +54,18 @@ const TypstEditor = ({ content, onChange }) => {
     },
   });
 
+  const handleFontChange = (latinFont, cjkFont) => {
+    const updatedContent = updateFontInContent(content, latinFont, cjkFont);
+    onChange(updatedContent);
+  };
+
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <EditorToolbar editor={editor} />
+      <EditorToolbar
+        editor={editor}
+        content={content}
+        onFontChange={handleFontChange}
+      />
       <div
         style={{
           flex: 1,
