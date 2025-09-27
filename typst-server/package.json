@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,9 +12,15 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@myriaddreamin/typst-ts-node-compiler": "^0.6.1-rc3",
+    "@myriaddreamin/typst-ts-renderer": "^0.6.1-rc3",
+    "@myriaddreamin/typst-ts-web-compiler": "^0.6.1-rc3",
+    "@myriaddreamin/typst.ts": "^0.6.1-rc3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "multer": "^2.0.1"
+    "multer": "^2.0.1",
+    "puppeteer": "^24.22.3",
+    "sharp": "^0.34.4"
   }
 }

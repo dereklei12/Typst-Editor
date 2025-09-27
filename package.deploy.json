@@ -1,0 +1,15 @@
+{
+  "name": "typst-editor-deploy",
+  "version": "1.0.0",
+  "description": "Typst Editor for Railway deployment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm install --prefix . && npm run build --prefix .",
+    "postbuild": "npm install --prefix typst-server"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
