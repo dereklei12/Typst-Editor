@@ -50,7 +50,7 @@ COPY typst-server/ ./typst-server/
 
 # 安装后端依赖
 WORKDIR /app/typst-server
-RUN npm install
+RUN npm install && npm audit fix --force
 
 # 复制字体文件
 COPY fonts/ /app/fonts/
