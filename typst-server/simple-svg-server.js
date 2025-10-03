@@ -204,6 +204,17 @@ app.post("/compile", async (req, res) => {
   }
 });
 
+// Firebase配置接口
+app.get("/api/firebase-config", (req, res) => {
+  const firebaseConfigPath = path.join(__dirname, "../firebase-config.json");
+  if (fs.existsSync(firebaseConfigPath)) {
+    const config = JSON.parse(fs.readFileSync(firebaseConfigPath, "utf8"));
+    res.json(config);
+  } else {
+    res.status(404).json({ error: "Firebase config not found" });
+  }
+});
+
 // 健康检查接口
 app.get("/health", (req, res) => {
   res.json({

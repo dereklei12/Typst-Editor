@@ -68,8 +68,9 @@ COPY typst-server/ ./typst-server/
 WORKDIR /app/typst-server
 RUN npm install && npm audit fix --force
 
-# 复制字体文件
+# 复制字体文件和Firebase配置
 COPY fonts/ /app/fonts/
+COPY firebase-config.json /app/build/firebase-config.json
 
 # 创建临时文件目录
 RUN mkdir -p /app/typst-server/temp
@@ -82,12 +83,8 @@ ENV TYPST_FONT_PATHS=/app/fonts
 # 暴露端口
 EXPOSE 8080
 
-# 复制环境变量生成脚本
-COPY generate-env-config.sh /app/
-RUN chmod +x /app/generate-env-config.sh
-
 # 确保工作目录是typst-server
 WORKDIR /app/typst-server
 
-# 启动脚本：先生成env配置，再启动服务
-CMD ["/bin/sh", "-c", "/app/generate-env-config.sh && node simple-svg-server.js"]
+# 启动服务
+CMD ["node", "simple-svg-server.js"]
