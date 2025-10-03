@@ -1,0 +1,145 @@
+.document-manager {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+.document-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.document-manager-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.btn-new-doc {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-new-doc:hover {
+  background: #5568d3;
+}
+
+.document-error {
+  background: #fee;
+  color: #c33;
+  padding: 12px 16px;
+  margin: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid #fcc;
+}
+
+.document-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.document-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #e0e0e0;
+}
+
+.document-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.document-info {
+  flex: 1;
+}
+
+.document-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.document-date {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.btn-delete {
+  background: #f5f5f5;
+  color: #666;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover {
+  background: #fee;
+  color: #c33;
+}
+
+.no-documents {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.no-documents p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+}
+
+.btn-create-first {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.btn-create-first:hover {
+  background: #5568d3;
+}
+
+.document-manager-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #999;
+  font-size: 16px;
+}
