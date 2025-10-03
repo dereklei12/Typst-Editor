@@ -40,6 +40,19 @@ async function loadFirebaseConfig() {
   } catch (error) {
     console.log('Could not load Firebase config from API, using env vars');
   }
+// Load Firebase config
+async function loadFirebaseConfig() {
+  // Try to load from server API (production)
+  try {
+    const response = await fetch('/api/firebase-config');
+    if (response.ok) {
+      const config = await response.json();
+      console.log('Loaded Firebase config from server API');
+      return config;
+    }
+  } catch (error) {
+    console.log('Could not load Firebase config from API, using env vars');
+  }
 -loadJSONfileproductionor  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
@@ -47,6 +60,19 @@ async function loadFirebaseConfig() {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 
+  // Fallback to environment variables (local development)
+  return {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
+  };
+}
+
+// Initialize Firebase with config
+const firebaseConfig = await loadFirebaseConfig();
   // Fallback to environment variables (local development)
   return {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
